@@ -1,0 +1,18 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+djangorestframework = "*"
+django = "*"
+markdown = "*"
+django-filter = "*"
+pyyaml = "*"
+pygments = "*"
+django-guardian = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.8"
