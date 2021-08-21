@@ -11,8 +11,11 @@ django-filter = "*"
 pyyaml = "*"
 pygments = "*"
 django-guardian = "*"
+django-cors-headers = "*"
 
 [dev-packages]
+pre-commit = "*"
+pytest = "*"
 
 [requires]
 python_version = "3.8"
