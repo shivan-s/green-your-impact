@@ -16,6 +16,8 @@ django-cors-headers = "*"
 [dev-packages]
 pre-commit = "*"
 pytest = "*"
+pytest-django = "*"
+pytest-cov = "*"
 
 [requires]
 python_version = "3.8"
