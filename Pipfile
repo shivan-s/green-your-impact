@@ -12,6 +12,8 @@ pyyaml = "*"
 pygments = "*"
 django-guardian = "*"
 django-cors-headers = "*"
+django-allauth = "*"
+django-rest-auth = "*"
 
 [dev-packages]
 pre-commit = "*"
