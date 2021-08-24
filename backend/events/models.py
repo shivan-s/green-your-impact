@@ -1,8 +1,17 @@
+import uuid
+
 from django.db import models
 
+from users.models import CustomUser
 
 class Event(models.Model):
-    user = models.CharField(max_length=200)
+    id = models.UUIDField(
+            primary_key=True,
+            default=uuid.uuid4,
+            )
+    custom_user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True)
+    last_edited = models.DateTimeField(auto_now=True)
 
     BIKE = "BIKE"
     PUBLIC_TRANSPORT = "PUBL"
@@ -17,8 +26,7 @@ class Event(models.Model):
     )
 
     distance_travelled = models.DecimalField(max_digits=5, decimal_places=2)
-    # carbon_saved = models.DecimalField()
     description = models.TextField()
 
     def __str__(self):
-        return self.user
+        return f'{self.custom_user}'

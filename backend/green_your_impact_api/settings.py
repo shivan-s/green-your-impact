@@ -43,8 +43,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    "corsheaders.middleware.CorsMiddleware", # CORS
-    "django.middleware.common.CommonMiddleware", #CORS
+    "corsheaders.middleware.CorsMiddleware",  # CORS
+    "django.middleware.common.CommonMiddleware",  # CORS
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -142,6 +142,6 @@ CORS_ORIGIN_WHITELIST = [
     "http://localhost:3000",
 ]
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 SITE_ID = 1

@@ -5,7 +5,7 @@ from .models import Event
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
         fields = (
-            "user",
+            "custom_user",
             "transport_type",
             "distance_travelled",
             "description",
