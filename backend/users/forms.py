@@ -11,6 +11,7 @@ class CustomUserCreationForm(UserCreationForm):
             "email",
         )
 
+
 class CustomUserChangeForm(UserChangeForm):
     class Meta:
         model = CustomUser

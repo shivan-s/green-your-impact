@@ -10,25 +10,31 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('events', '0005_alter_event_id'),
+        ("events", "0005_alter_event_id"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='event',
-            name='created',
-            field=models.DateTimeField(auto_now_add=True, default=django.utils.timezone.now),
+            model_name="event",
+            name="created",
+            field=models.DateTimeField(
+                auto_now_add=True, default=django.utils.timezone.now
+            ),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='event',
-            name='custom_user',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, to='users.customuser'),
+            model_name="event",
+            name="custom_user",
+            field=models.ForeignKey(
+                default=1,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="users.customuser",
+            ),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='event',
-            name='last_edited',
+            model_name="event",
+            name="last_edited",
             field=models.DateTimeField(auto_now=True),
         ),
     ]
