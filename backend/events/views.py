@@ -1,14 +1,14 @@
 from rest_framework import generics
 
-from .models import Event
-from .serializers import EventSerializer
+from . import models
+from . import serializers
 
 
 class ListEvent(generics.ListCreateAPIView):
-    queryset = Event.objects.all()
-    serializer_class = EventSerializer
+    queryset = models.Event.objects.all()
+    serializer_class = serializers.EventSerializer
 
 
 class DetailEvent(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Event.objects.all()
-    serializer_class = EventSerializer
+    queryset = models.Event.objects.all()
+    serializer_class = serializers.EventSerializer

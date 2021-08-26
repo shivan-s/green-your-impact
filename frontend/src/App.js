@@ -1,52 +1,25 @@
-import React, { Component } from 'react';
+import logo from './logo.svg';
+import './App.css';
 
-const list = [
-	{
-		"user": "Shivan",
-		"transport_type": "WALK",
-		"distance_travelled": "10.00",
-		"description": "Biked to work"
-	},
-	{
-		"user": "Saxon",
-		"transport_type": "BIKE",
-		"distance_travelled": "100.00",
-		"description": "Walked to work"
-	},
-	{
-		"user": "Deb",
-		"transport_type": "WALK",
-		"distance_travelled": "99.98",
-		"description": "Biked to work"
-	},
-	{
-		"user": "Dave",
-		"transport_type": "PUBL",
-		"distance_travelled": "500.00",
-		"description": "I love the bus"
-	}
-]
-
-class App extends Component {
-	constructor(props) {
-		super(props);
-		this.state = { list };
-	}
-
-	render() {
-		return (
-			<div>
-			{this.state.list.map(item => (
-				<div>
-				<h1>{item.user}</h1>
-				<h2>{item.transport_type}</h2>
-				<span>{item.distance_travelled}</span>
-				<span>{item.description}</span>
-				</div>
-			))}
-			</div>
-		);
-	}
+function App() {
+  return (
+    <div className="App">
+      <header className="App-header">
+        <img src={logo} className="App-logo" alt="logo" />
+        <p>
+          Edit <code>src/App.js</code> and save to reload.
+        </p>
+        <a
+          className="App-link"
+          href="https://reactjs.org"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Learn React
+        </a>
+      </header>
+    </div>
+  );
 }
 
 export default App;
