@@ -11,7 +11,10 @@ class Event(models.Model):
         default=uuid.uuid4,
         editable=False,
     )
-    custom_user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    is_private = models.BooleanField(default=False)
+    custom_user = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE, editable=False
+    )
     created = models.DateTimeField(auto_now_add=True)
     last_edited = models.DateTimeField(auto_now=True)
 
