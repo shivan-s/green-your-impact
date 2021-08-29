@@ -35,11 +35,12 @@ INSTALLED_APPS = [
     "corsheaders",
     "rest_framework",
     "rest_framework.authtoken",
-    "rest_auth",
+    "dj_rest_auth",  # replacement for rest_auth
+    # "rest_auth", # removing rest_auth as no longe maintained
     "django.contrib.sites",
     "allauth",
     "allauth.account",
-    "rest_auth.registration",
+    # "rest_auth.registration",
 ]
 
 MIDDLEWARE = [
