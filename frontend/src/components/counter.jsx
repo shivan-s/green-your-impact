@@ -2,7 +2,7 @@ import React, { Component } from "react";
 
 class Counter extends Component {
 	state = {
-		count: 10,
+		count: 100,
 		tags: ['tag1', 'tag2', 'tag3']
 	};
 

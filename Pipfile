@@ -14,6 +14,7 @@ django-guardian = "*"
 django-cors-headers = "*"
 django-allauth = "*"
 django-rest-auth = "*"
+dj-rest-auth = "*"
 
 [dev-packages]
 pre-commit = "*"
