@@ -77,7 +77,6 @@ class TestEvent(TestSetUp):
         # authenticated user
         self.client.force_authenticate(user=self.user_1)
         request = self.client.post(url, data, format="json")
-        __import__("pdb").set_trace()
         assert request.status_code == status.HTTP_201_CREATED
         filtered_query = Event.objects.filter(id=request.data["id"])
         assert filtered_query.count() == 1
