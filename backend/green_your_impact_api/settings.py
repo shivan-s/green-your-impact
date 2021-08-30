@@ -9,9 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 # TODO: secure the key
-SECRET_KEY = (
-    "django-insecure-i@yt+=$vy1e()#odjq$j5$0dj71vpuim+nary-y%kie^=svl$t"
-)
+SECRET_KEY = "django-insecure-i@yt+=$vy1e()#odjq$j5$0dj71vpuim+nary-y%kie^=svl$t"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # TODO: make this secure
@@ -38,11 +36,10 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "dj_rest_auth",  # replacement for rest_auth
-    # "rest_auth", # removing rest_auth as no longe maintained
     "django.contrib.sites",
     "allauth",
     "allauth.account",
-    # "rest_auth.registration",
+    "allauth.socialaccount",
 ]
 
 MIDDLEWARE = [

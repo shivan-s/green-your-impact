@@ -24,11 +24,10 @@ class TestCustomUser(APITestCase):
         assert CustomUser.objects.get().username == data["username"]
 
 
-# TODO:  test listing user
-# class TestCustomUser:
-#    factor = APIRequestFactory()
-#    request = factory.get("/users/users")
+# TODO: Write tests, but does this need to be done since we know this is a third
+#       party package and it works???
 
+# TODO:  test listing user
 
 # TODO:  test retrieve users
 
