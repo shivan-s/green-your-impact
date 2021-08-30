@@ -57,4 +57,7 @@ class EventViewSet(viewsets.ModelViewSet):
             return EventSerializer
 
     queryset = Event.objects.all()
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerAndPrivateEvent]
+    permission_classes = [
+        permissions.IsAuthenticatedOrReadOnly,
+        IsOwnerAndPrivateEvent,
+    ]

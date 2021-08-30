@@ -10,15 +10,16 @@ import pytest
 
 from events.models import Event
 from events.hello.test_setup import TestSetUp
+from events.views import EventViewSet
 
 # TODO: Test if Events can be created
 class TestEvent(TestSetUp):
     def test_create_event(self):
         """
-        Ensure event can be created by an authenticated user
+        Ensure event can only be created by an authenticated user
         """
-        # TODO: can use self.client, insread of APIClient
-        client = APIClient()
+        # factory = APIRequestFactory()
+        view = EventViewSet.as_view({"post": "list"})
         url = reverse("events-list")
         data = {
             "is_private": "false",
@@ -26,15 +27,19 @@ class TestEvent(TestSetUp):
             "distance_travelled": 10.00,
             "description": "Test",
         }
-        request = client.post(url, data, format="json")
+        request = self.client.post(url, data, format="json")
         # unauthenticated user
         assert request.status_code == status.HTTP_403_FORBIDDEN
         # authenticated user
-        # client.force_authenticate(user="TestUser")
-        request = client.post(url, data, format="json")
+        self.client.force_authenticate(user=self.user_1)
+        request = self.client.post(url, data, format="json")
         assert request.status_code == status.HTTP_201_CREATED
         assert Event.objects.count() == 1
         assert Event.objects.get().description == data["description"]
+
+    def test_list_event(self):
+        """
+        Ensure public events can be viewed 
 
     # Test unauthenticated user
 
