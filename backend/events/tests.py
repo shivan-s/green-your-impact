@@ -1,6 +1,5 @@
 from django.urls import reverse
 from rest_framework import status
-from rest_framework.authtoken.models import Token
 from rest_framework.test import APITestCase
 import pytest
 
@@ -52,6 +51,7 @@ class TestSetUp(APITestCase):
         return super().setUp()
 
     def tearDown(self):
+        self.client.force_authenticate(user=None)
         self.user_1.delete()
         self.user_2.delete()
         self.event_1_private.delete()
@@ -64,6 +64,8 @@ class TestEvent(TestSetUp):
         """
         Ensure event can only be created by an authenticated user
         """
+        # https://www.django-rest-framework.org/api-guide/routers/
+        # on reverse names
         url = reverse("events-list")
         data = {
             "is_private": False,
@@ -71,10 +73,12 @@ class TestEvent(TestSetUp):
             "distance_travelled": 10.00,
             "description": "Test",
         }
+
+        # Unauthenticated user cannot create an event
         request = self.client.post(url, data, format="json")
-        # unauthenticated user
         assert request.status_code == status.HTTP_403_FORBIDDEN
-        # authenticated user
+
+        # Authenticated user can create an event
         self.client.force_authenticate(user=self.user_1)
         request = self.client.post(url, data, format="json")
         assert request.status_code == status.HTTP_201_CREATED
@@ -87,16 +91,61 @@ class TestEvent(TestSetUp):
         """
         Ensure public events can be viewed and not private events unless by the owner
         """
-        # Unauthenticated user can see public events and not private event
-        # Authenticated user 1 can see it's own private event
+        url = reverse("events-list")
+
+        # Unauthenticated user can see public events and not private events
+        request = self.client.get(url)
+        assert request.status_code == status.HTTP_200_OK
+        assert len(request.data) == 1
+        assert request.data[0]["description"] == "Test - Public"
+
+        # Authenticated user 1 can see their own private event
+        self.client.force_authenticate(user=self.user_1)
+        request = self.client.get(url)
+        assert request.status_code == status.HTTP_200_OK
+        assert len(request.data) == 2
+        # set is used to ignore order
+        user_1_description_set = {obj["description"] for obj in request.data}
+        assert user_1_description_set == {"Test - Public", "Test - Private"}
+
         # Authenticated user 2 cannot see user 1's private events
-        pass
+        self.client.force_authenticate(user=self.user_2)
+        request = self.client.get(url)
+        assert request.status_code == status.HTTP_200_OK
+        assert len(request.data) == 1
+        user_2_description_set = {obj["description"] for obj in request.data}
+        assert user_2_description_set != {"Test - Public", "Test - Private"}
+        assert request.data[0]["description"] == "Test - Public"
 
     def test_retrieve_event(self):
         """
         Ensure public events can be viewed and not private events unless by the owners
         """
         pass
+        url = reverse("events-retrieve")
+
+        # Unauthenticated user can see public events and not private events
+        request = self.client.get(url)
+        assert request.status_code == status.HTTP_200_OK
+        assert len(request.data) == 1
+        assert request.data[0]["description"] == "Test - Public"
+
+        # Authenticated user 1 can see their own private event
+        self.client.force_authenticate(user=self.user_1)
+        request = self.client.get(url)
+        assert request.status_code == status.HTTP_200_OK
+        assert len(request.data) == 2
+        # set is used to ignore order
+        description_set = {obj["description"] for obj in request.data}
+        assert description_set == {"Test - Public", "Test - Private"}
+
+        # Authenticated user 2 cannot see user 1's private events
+        self.client.force_authenticate(user=self.user_2)
+        request = self.client.get(url)
+        assert request.status_code == status.HTTP_200_OK
+        assert len(request.data) == 1
+        # set is used to ignore order
+        assert request.data[0]["description"] == "Test - Public"
 
     def test_edit_event(self):
         """

@@ -43,7 +43,7 @@ class EventViewSet(viewsets.ModelViewSet):
     """
 
     def get_queryset(self):
-        if self.request.user.get("id"):
+        if self.request.user.id:
             qs1 = Event.objects.filter(is_private=False)
             qs2 = Event.objects.filter(custom_user=self.request.user.id)
             qs = qs1.union(qs2).order_by("created")
@@ -57,6 +57,7 @@ class EventViewSet(viewsets.ModelViewSet):
             return EventSerializer
 
     queryset = Event.objects.all()
+
     permission_classes = [
         permissions.IsAuthenticatedOrReadOnly,
         IsOwnerAndPrivateEvent,
