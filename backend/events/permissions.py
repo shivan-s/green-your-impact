@@ -3,7 +3,7 @@ from rest_framework import permissions
 
 class IsOwnerAndPrivateEvent(permissions.BasePermission):
     """
-    Custom permission to allow sers to see own private events
+    Custom permission to allow users to see own private events
     """
 
     message = "You do not have permission to view this event"
@@ -12,6 +12,7 @@ class IsOwnerAndPrivateEvent(permissions.BasePermission):
         """
         Owner of event can see/edit/delete their event
         """
+        __import__("pdb").set_trace()
         if obj.is_private == False:
             # Public Events
             return True

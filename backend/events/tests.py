@@ -14,14 +14,13 @@ class TestSetUp(APITestCase):
 
     def setUp(self):
         # Setting up test users
-        register_url = reverse("rest_register")
-        # First Test User
+        # - First Test User
         register_data_1 = {
             "username": "TestUser_1",
             "email": "test@testemail.com",
             "password": "tEsT1234@!",
         }
-        # Second Test User
+        # - Second Test User
         register_data_2 = {
             "username": "TestUser_2",
             "email": "test@testemail.com",
@@ -30,12 +29,16 @@ class TestSetUp(APITestCase):
         # ** - keyword arguments
         self.user_1 = CustomUser.objects.create(**register_data_1)
         self.user_2 = CustomUser.objects.create(**register_data_2)
+
+        # Setting up test events
+        # - Private event liked to First Test User
         event_data_1_private = {
             "is_private": True,
             "transport_type": "BIKE",
             "distance_travelled": 10.00,
             "description": "Test - Private",
         }
+        # - Public event linked to Second Test User
         event_data_2_public = {
             "is_private": False,
             "transport_type": "BIKE",
@@ -59,6 +62,8 @@ class TestSetUp(APITestCase):
         return super().tearDown()
 
 
+# TODO: Build more tests: retrieve, edit, delete - also reorder
+# TODO reorder list, detail, create, edit, delete
 class TestEvent(TestSetUp):
     def test_create_event(self):
         """
@@ -86,7 +91,6 @@ class TestEvent(TestSetUp):
         assert filtered_query.count() == 1
         assert filtered_query[0].description == data["description"]
 
-    # TODO: Build more tests
     def test_list_event(self):
         """
         Ensure public events can be viewed and not private events unless by the owner
@@ -97,7 +101,7 @@ class TestEvent(TestSetUp):
         request = self.client.get(url)
         assert request.status_code == status.HTTP_200_OK
         assert len(request.data) == 1
-        assert request.data[0]["description"] == "Test - Public"
+        assert request.data[0]["description"] == self.event_2_public.description
 
         # Authenticated user 1 can see their own private event
         self.client.force_authenticate(user=self.user_1)
@@ -106,7 +110,10 @@ class TestEvent(TestSetUp):
         assert len(request.data) == 2
         # set is used to ignore order
         user_1_description_set = {obj["description"] for obj in request.data}
-        assert user_1_description_set == {"Test - Public", "Test - Private"}
+        assert user_1_description_set == {
+            self.event_2_public.description,
+            self.event_1_private.description,
+        }
 
         # Authenticated user 2 cannot see user 1's private events
         self.client.force_authenticate(user=self.user_2)
@@ -114,38 +121,54 @@ class TestEvent(TestSetUp):
         assert request.status_code == status.HTTP_200_OK
         assert len(request.data) == 1
         user_2_description_set = {obj["description"] for obj in request.data}
-        assert user_2_description_set != {"Test - Public", "Test - Private"}
-        assert request.data[0]["description"] == "Test - Public"
+        assert user_2_description_set != {
+            self.event_2_public.description,
+            self.event_1_private.description,
+        }
+        assert request.data[0]["description"] == self.event_2_public.description
 
     def test_retrieve_event(self):
         """
         Ensure public events can be viewed and not private events unless by the owners
         """
-        pass
-        url = reverse("events-retrieve")
-
         # Unauthenticated user can see public events and not private events
+        # - public event
+        url = reverse("events-detail", args=[self.event_2_public.id])
         request = self.client.get(url)
         assert request.status_code == status.HTTP_200_OK
-        assert len(request.data) == 1
-        assert request.data[0]["description"] == "Test - Public"
+        assert request.data["description"] == self.event_2_public.description
+        # - private event
+        url = reverse("events-detail", args=[self.event_1_private.id])
+        request = self.client.get(url)
+        # private event is not forbidden, it is hidden due to search query nature
+        assert request.status_code == status.HTTP_404_NOT_FOUND
 
         # Authenticated user 1 can see their own private event
         self.client.force_authenticate(user=self.user_1)
+        # - user 1 private event
+        url = reverse("events-detail", args=[self.event_1_private.id])
         request = self.client.get(url)
         assert request.status_code == status.HTTP_200_OK
-        assert len(request.data) == 2
-        # set is used to ignore order
-        description_set = {obj["description"] for obj in request.data}
-        assert description_set == {"Test - Public", "Test - Private"}
+        assert request.data["description"] == self.event_1_private.description
+
+        # - public event
+        url = reverse("events-detail", args=[self.event_2_public.id])
+        request = self.client.get(url)
+        assert request.status_code == status.HTTP_200_OK
+        assert request.data["description"] == self.event_2_public.description
 
         # Authenticated user 2 cannot see user 1's private events
         self.client.force_authenticate(user=self.user_2)
+        # - user 1 private event
+        url = reverse("events-detail", args=[self.event_1_private.id])
+        request = self.client.get(url)
+        assert request.status_code == status.HTTP_404_NOT_FOUND
+
+        # - public event
+        url = reverse("events-detail", args=[self.event_2_public.id])
         request = self.client.get(url)
         assert request.status_code == status.HTTP_200_OK
-        assert len(request.data) == 1
-        # set is used to ignore order
-        assert request.data[0]["description"] == "Test - Public"
+        assert request.data["description"] == self.event_2_public.description
 
     def test_edit_event(self):
         """

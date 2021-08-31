@@ -11,7 +11,7 @@ So far...
       - The event describes what they did
       - E.g. Public event, biked, 10km (TODO: work out carbon saved)
 2. TODO: have other events like recycling etc.
-3. Authentication with social platforms
+3. TODO: Authentication with social platforms
 
 ## How this works
 
@@ -24,5 +24,4 @@ So far...
 
 - DRF: https://www.django-rest-framework.org/
 - ReactJS: https://reactjs.org/
-- React Native: https://reactnative.dev/
 - React Native: https://reactnative.dev/
