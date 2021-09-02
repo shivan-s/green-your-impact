@@ -15,15 +15,9 @@ class IsOwner(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             # private events should be stopped at the level of the query but
             # this is here for extra security
-            if obj.is_private == True:
-                if obj.custom_user == request.user:
-                    return True
-                else:
-                    return False
+            if obj.is_private:
+                return obj.custom_user == request.user
             else:
                 return True
         else:
-            if obj.custom_user == request.user:
-                return True
-            else:
-                return False
+            return obj.custom_user == request.user

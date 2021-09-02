@@ -270,8 +270,44 @@ class TestEvent(TestSetUp):
         assert request.status_code == status.HTTP_403_FORBIDDEN
         assert filtered_query[0].description != data["description"]
 
-    def test_delete_event(self):
+    def test_delete_event_unauthenticated_public(self):
         """
-        Ensure event can only be deleted by the owner
+        Unauthenicated user cannot delete public events
         """
-        pass
+        url = reverse("events-detail", args=[self.event_2_public.id])
+        request = self.client.delete(url)
+        filtered_query = Event.objects.filter(id=self.event_2_public.id)
+        assert request.status_code == status.HTTP_403_FORBIDDEN
+        assert filtered_query[0].description == self.event_2_public.description
+
+    def test_delete_event_unauthenticated_private(self):
+        """
+        Unauthenticated user cannot delete a private event
+        """
+        url = reverse("events-detail", args=[self.event_1_private.id])
+        request = self.client.delete(url)
+        filtered_query = Event.objects.filter(id=self.event_1_private.id)
+        # 403 is given because unauthenticated user cannot delete
+        assert request.status_code == status.HTTP_403_FORBIDDEN
+        assert filtered_query[0].description == self.event_1_private.description
+
+    def test_delete_event_user_1_own(self):
+        """
+        User 1 can delete their own event
+        """
+        url = reverse("events-detail", args=[self.event_1_private.id])
+        self.client.force_authenticate(user=self.user_1)
+        request = self.client.delete(url)
+        filtered_query = Event.objects.filter(id=self.event_1_private.id)
+        assert request.status_code == status.HTTP_204_NO_CONTENT
+
+    def test_delete_event_user_1_other(self):
+        """
+        User 1 cannot delete User 2's event
+        """
+        url = reverse("events-detail", args=[self.event_2_public.id])
+        self.client.force_authenticate(user=self.user_1)
+        request = self.client.delete(url)
+        filtered_query = Event.objects.filter(id=self.event_2_public.id)
+        assert request.status_code == status.HTTP_403_FORBIDDEN
+        assert filtered_query[0].description == self.event_2_public.description
