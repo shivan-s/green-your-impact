@@ -3,6 +3,7 @@ from rest_framework import generics
 
 from .models import CustomUser
 from events.models import Event
+from .permissions import PrivateIsOwner
 from .serializers import UserSerializer
 from events.serializers import EventSerializer
 
@@ -17,6 +18,7 @@ class UserViewSet(viewsets.ModelViewSet):
 class UserEventListView(generics.ListAPIView):
     lookup_field = "uuid"
     serializer_class = EventSerializer
+    permission_classes = [PrivateIsOwner]
 
     # TODO: Hide private events
     def get_queryset(self):

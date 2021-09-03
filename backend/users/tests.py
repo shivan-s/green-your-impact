@@ -3,12 +3,14 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 import pytest
 
+from events.models import Event
 from users.models import CustomUser
 
 
 class TestSetUp(APITestCase):
     """
-    Setting up 2 test users each with 1 event. 1 event is public and 1 is private
+    Setting up 2 test users each with 1 event. 1 event is public and 1 is
+    private
     """
 
     def setUp(self):
@@ -69,20 +71,40 @@ class TestCustomUser(TestSetUp):
         url = reverse("rest_register")
         data = {
             "username": "TestUser",
-            "email": "test@testemail.com",
+            "email": "test_x@testemail.com",
             "password1": "tEsT1234@!",
             "password2": "tEsT1234@!",
         }
-        response = self.client.post(url, data, format="json")
-        filtered_query = CustomUser.objects.filter(id=response.data.id)
-        assert response.status_code == status.HTTP_201_CREATED
+        request = self.client.post(url, data, format="json")
+        filtered_query = CustomUser.objects.filter(username=data["username"])
+        assert request.status_code == status.HTTP_201_CREATED
         assert filtered_query.count() == 1
         assert filtered_query[0].username == data["username"]
 
-    def get_list_events_from_user_unauthenticated(self):
+    def test_list_events_from_user_unauthenticated(self):
         """
         Get a list of events for a user while being unauthenticated
         """
-        url = reverse("user-all-events", args=[self.user_1.id])
-        response.
+        url = reverse("user-all-events", args=[self.user_2.id])
+        request = self.client.get(url)
+        assert request.status_code == status.HTTP_200_OK
+        assert len(request.data) == 1
 
+    def test_list_events_from_user_unauthenticated_private(self):
+        """
+        Checking if private events or hidden when unauthenticated
+        """
+        url = reverse("user-all-events", args=[self.user_1.id])
+        request = self.client.get(url)
+        assert request.status_code == status.HTTP_403_FORBIDDEN
+        assert len(request.data) == 0
+
+    def test_list_events_from_user_authenticated(self):
+        """
+        Ensure owner can see own private events
+        """
+        url = reverse("user-all-events", args=[self.user_1.id])
+        request = self.client.get(url)
+        self.client.force_authenticate(user=self.user_1)
+        assert request.status_code == status.HTTP_200_OK
+        assert len(request.data) == 1
