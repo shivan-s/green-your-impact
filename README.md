@@ -1,6 +1,6 @@
 # green-your-impact
 
-An app that rewards your effort to reduce impact on global warming
+An app that rewards your effort to reduce impact on global warming.
 
 # Explaining the application
 

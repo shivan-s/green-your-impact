@@ -2,11 +2,9 @@ from rest_framework import viewsets
 from rest_framework import generics
 
 from .models import CustomUser
-from events.models import Event
-from .permissions import PrivateIsOwner
 from .serializers import UserSerializer, UserDetailSerializer
 
-
+# TODO: Find a way to hide private nested serialised events
 class UserViewSet(viewsets.ModelViewSet):
     """
     # Viewset for users

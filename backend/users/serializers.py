@@ -21,31 +21,23 @@ class UserEventSerializer(serializers.ModelSerializer):
         model = Event
 
 
-# TODO: Combine this with UserSerializer so not violating DRY
-class UserDetailSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
+    url = serializers.HyperlinkedIdentityField(
+        view_name="users-detail", read_only=True
+    )
 
-    url = serializers.HyperlinkedIdentityField(view_name="users-detail", read_only=True)
+    class Meta:
+        model = CustomUser
+        fields = (
+            "url",
+            "email",
+            "username",
+            "total_carbon_saved",
+        )
+
+
+class UserDetailSerializer(UserSerializer):
     event_set = UserEventSerializer(many=True, read_only=True)
 
-    class Meta:
-        model = CustomUser
-        fields = (
-            "url",
-            "email",
-            "username",
-            "total_carbon_saved",
-            "event_set",
-        )
-
-
-class UserSerializer(serializers.ModelSerializer):
-    url = serializers.HyperlinkedIdentityField(view_name="users-detail", read_only=True)
-
-    class Meta:
-        model = CustomUser
-        fields = (
-            "url",
-            "email",
-            "username",
-            "total_carbon_saved",
-        )
+    class Meta(UserSerializer.Meta):
+        fields = UserSerializer.Meta.fields + ("event_set",)
