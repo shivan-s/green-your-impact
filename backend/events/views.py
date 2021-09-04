@@ -9,8 +9,8 @@ from .serializers import EventSerializer, CreateEventSerializer
 class EventViewSet(viewsets.ModelViewSet):
     """
     # Viewset for events
-        - Public events can be viewed by everyone including NONAUTHENTICATED USERS. But only editable by the owner.
-        - Private events can only be viewed by the OWNER.
+    - Public events can be viewed by everyone including unauthenticated users. But only editable by the owner.
+    - Private events can only be viewed by the owner.
     """
 
     def get_queryset(self):
