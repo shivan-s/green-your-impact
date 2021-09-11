@@ -12,6 +12,7 @@ class UserEventSerializer(serializers.ModelSerializer):
 
     class Meta:
         fields = (
+            "id",
             "url",
             "is_private",
             "transport_type",
@@ -22,21 +23,23 @@ class UserEventSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    url = serializers.HyperlinkedIdentityField(
-        view_name="users-detail", read_only=True
-    )
+    url = serializers.HyperlinkedIdentityField(view_name="users-detail", read_only=True)
 
     class Meta:
+        lookup_field = "username"
         model = CustomUser
         fields = (
+            "id",
             "url",
             "email",
             "username",
             "total_carbon_saved",
+            "date_joined",
         )
 
 
 class UserDetailSerializer(UserSerializer):
+    # Ensures the event set is only present in the detail view for a user
     event_set = UserEventSerializer(many=True, read_only=True)
 
     class Meta(UserSerializer.Meta):

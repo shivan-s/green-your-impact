@@ -131,3 +131,6 @@ dmypy.json
 # vim stuff
 *.swp
 *.swo
+
+# nohup
+nohup.out

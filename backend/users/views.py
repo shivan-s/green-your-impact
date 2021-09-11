@@ -1,6 +1,7 @@
 from rest_framework import viewsets
 from rest_framework import generics
 
+from events.models import Event
 from .models import CustomUser
 from .serializers import UserSerializer, UserDetailSerializer
 
@@ -9,7 +10,8 @@ class UserViewSet(viewsets.ModelViewSet):
     """
     # Viewset for users
     - List view shows users
-    - Detail views of user will also their events
+    - Detail views of user will also their events, but only users can see their
+        own private events
     """
 
     def get_queryset(self):
@@ -20,3 +22,13 @@ class UserViewSet(viewsets.ModelViewSet):
             return UserDetailSerializer
         else:
             return UserSerializer
+
+
+class UserNameView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Provides retrieve view by username
+    """
+
+    lookup_field = "username"
+    queryset = CustomUser.objects.all()
+    serializer_class = UserDetailSerializer

@@ -19,6 +19,7 @@ class EventSerializer(serializers.ModelSerializer):
 
     class Meta:
         fields = (
+            "id",
             "url",
             "custom_user",
             "custom_user_name",
@@ -31,6 +32,4 @@ class EventSerializer(serializers.ModelSerializer):
 
 
 class CreateEventSerializer(EventSerializer):
-    custom_user = serializers.HiddenField(
-        default=serializers.CurrentUserDefault()
-    )
+    custom_user = serializers.HiddenField(default=serializers.CurrentUserDefault())

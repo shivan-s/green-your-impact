@@ -81,30 +81,27 @@ class TestCustomUser(TestSetUp):
         assert filtered_query.count() == 1
         assert filtered_query[0].username == data["username"]
 
-    def test_list_events_from_user_unauthenticated(self):
+    def test_detail_user_event_set_own_user(self):
         """
-        Get a list of events for a user while being unauthenticated
+        Ensure the user can see all their events in the event_set, which is a
+        nested serializer
+        If this test passes then unauthenticated should be able to see public
+        events in the event set
         """
-        url = reverse("user-all-events", args=[self.user_2.id])
-        request = self.client.get(url)
-        assert request.status_code == status.HTTP_200_OK
-        assert len(request.data) == 1
-
-    def test_list_events_from_user_unauthenticated_private(self):
-        """
-        Checking if private events or hidden when unauthenticated
-        """
-        url = reverse("user-all-events", args=[self.user_1.id])
-        request = self.client.get(url)
-        assert request.status_code == status.HTTP_403_FORBIDDEN
-        assert len(request.data) == 0
-
-    def test_list_events_from_user_authenticated(self):
-        """
-        Ensure owner can see own private events
-        """
-        url = reverse("user-all-events", args=[self.user_1.id])
-        request = self.client.get(url)
+        url = reverse("users-detail", args=[self.user_1.id])
         self.client.force_authenticate(user=self.user_1)
+        request = self.client.get(url)
         assert request.status_code == status.HTTP_200_OK
-        assert len(request.data) == 1
+        assert len(request.data["event_set"]) == 1
+
+    def test_detail_user_event_set_not_own_user(self):
+        """
+        Ensure private events cannot be viewed in the event set of a user
+        User is authenticated as other user, so if this test passes, it should
+        also be the case for an unauthenticated user
+        """
+        url = reverse("users-detail", args=[self.user_1.id])
+        self.client.force_authenticate(user=self.user_2)
+        request = self.client.get(url)
+        assert request.status_code == status.HTTP_200_OK
+        assert len(request.data["event_set"]) == 0
