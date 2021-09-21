@@ -9,7 +9,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 # TODO: secure the key
-SECRET_KEY = "django-insecure-i@yt+=$vy1e()#odjq$j5$0dj71vpuim+nary-y%kie^=svl$t"
+SECRET_KEY = (
+    "django-insecure-i@yt+=$vy1e()#odjq$j5$0dj71vpuim+nary-y%kie^=svl$t"
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # TODO: make this secure
@@ -111,7 +113,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "NZ"
 
 USE_I18N = True
 
@@ -138,8 +140,10 @@ REST_FRAMEWORK = {
     ]
 }
 
+# TODO: ensure react is whitelisted
 CORS_ORIGIN_WHITELIST = [
     "http://localhost:3000",
+    "http://127.0.0.1:3000",
 ]
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"

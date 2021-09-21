@@ -32,4 +32,6 @@ class EventSerializer(serializers.ModelSerializer):
 
 
 class CreateEventSerializer(EventSerializer):
-    custom_user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    custom_user = serializers.HiddenField(
+        default=serializers.CurrentUserDefault()
+    )

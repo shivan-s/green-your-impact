@@ -109,7 +109,9 @@ class TestEvent(TestSetUp):
         request = self.client.get(url)
         assert request.status_code == status.HTTP_200_OK
         assert len(request.data) == 1
-        assert request.data[0]["description"] == self.event_2_public.description
+        assert (
+            request.data[0]["description"] == self.event_2_public.description
+        )
 
     def test_list_event_authenticated_user_1(self):
         """
@@ -142,7 +144,9 @@ class TestEvent(TestSetUp):
             self.event_2_public.description,
             self.event_1_private.description,
         }
-        assert request.data[0]["description"] == self.event_2_public.description
+        assert (
+            request.data[0]["description"] == self.event_2_public.description
+        )
 
     def test_retrieve_event_unauthenticated_public(self):
         """
@@ -290,7 +294,9 @@ class TestEvent(TestSetUp):
         filtered_query = Event.objects.filter(id=self.event_1_private.id)
         # 403 is given because unauthenticated user cannot delete
         assert request.status_code == status.HTTP_403_FORBIDDEN
-        assert filtered_query[0].description == self.event_1_private.description
+        assert (
+            filtered_query[0].description == self.event_1_private.description
+        )
 
     def test_delete_event_user_1_own(self):
         """

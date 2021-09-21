@@ -10,6 +10,8 @@ class UserEventSerializer(serializers.ModelSerializer):
         view_name="events-detail", read_only=True
     )
 
+    # TODO Need to some how filter the nested serializer
+
     class Meta:
         fields = (
             "id",
@@ -23,7 +25,9 @@ class UserEventSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    url = serializers.HyperlinkedIdentityField(view_name="users-detail", read_only=True)
+    url = serializers.HyperlinkedIdentityField(
+        view_name="users-detail", read_only=True
+    )
 
     class Meta:
         lookup_field = "username"
